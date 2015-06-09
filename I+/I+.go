@@ -9,16 +9,13 @@ import (
 	acme "github.com/ygorshenin/acmescripts"
 )
 
-func main() {
-	checkError := func(err error, msg string) {
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: %s\n", msg, err.Error())
-			os.Exit(-1)
-		}
-	}
+func usage() {
+	fmt.Fprintln(os.Stderr, "Udage: %s [num-spaces]", os.Args[0])
+	os.Exit(-1)
+}
 
+func main() {
 	var numSpaces int = 2
-	var err error = nil
 
 	switch len(os.Args) {
 	case 1:
@@ -28,24 +25,20 @@ func main() {
 		if err == nil && numSpaces < 0 {
 			err = errors.New("Negative numSpacess are disallowed.")
 		}
-		checkError(err, fmt.Sprintf("Can't parse command line argument: %s", os.Args[1]))
+		acme.CheckError(err, "Can't parse command line argument:", os.Args[1])
 	default:
-		fmt.Fprintln(os.Stderr, "Usage: %s [numSpaces]", os.Args[0])
+		usage()
 	}
 
-	win, err := acme.GetCurrentWindow()
-	checkError(err, "Can't get current window")
+	win := acme.GetCurrentWindow()
 	defer win.CloseFiles()
 
-	data, err := acme.ReadSelection(win)
-	checkError(err, "Can't read dot contents")
-
-	start, _, err := acme.GetDotAddr(win)
-	checkError(err, "Can't get dot addr")
+	dot := acme.ReadDot(win)
+	start, _ := acme.ReadAddr(win)
 
 	// Indents dot, updates selection.
-	data = acme.Indent(data, numSpaces)
-	win.Write("data", data)
-	win.Addr("#%v,#%v", start, start+len(data))
-	win.Ctl("dot=addr")
+	dot = acme.Indent(dot, numSpaces)
+	acme.Write(win, "data", dot)
+	acme.WriteAddr(win, "#%v,#%v", start, start+len(dot))
+	acme.Ctl(win, "dot=addr")
 }
