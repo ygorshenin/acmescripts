@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	acme "github.com/acmescripts"
+	acme "github.com/ygorshein/acmescripts"
 )
 
 func main() {
