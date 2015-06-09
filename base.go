@@ -76,7 +76,6 @@ func Indent(data []byte, numSpaces int) []byte {
 	var prefix []byte = []byte(strings.Repeat(" ", numSpaces))
 	var sep []byte = []byte("\n")
 
-	var trailingNewline bool = (data[len(data)-1] == '\n')
 	var result []byte = make([]byte, 0)
 	for _, line := range bytes.Split(data, sep) {
 		if len(line) > 0 {
@@ -85,8 +84,5 @@ func Indent(data []byte, numSpaces int) []byte {
 		}
 		result = append(result, '\n')
 	}
-	if !trailingNewline {
-		result = result[0 : len(result)-1]
-	}
-	return result
+	return result[0 : len(result)-1]
 }
