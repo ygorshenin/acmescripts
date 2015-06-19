@@ -30,9 +30,8 @@ func main() {
 	cmd.Stdout = &out
 	acme.CheckError(cmd.Run(), "Can't run clang-format")
 
-	acme.WriteAddr(win, ",")
-	acme.Ctl(win, "dot=addr")
-	acme.Write(win, "data", out.Bytes())
-	acme.WriteAddr(win, "#%v,#%v", from, out.Len()-(len(in)-to))
+	to = out.Len() - (len(in) - to)
+	acme.Write(win, "data", out.Bytes()[from:to])
+	acme.WriteAddr(win, "#%v,#%v", from, to)
 	acme.Ctl(win, "dot=addr")
 }
