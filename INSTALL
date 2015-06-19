@@ -1,11 +1,17 @@
 #!/bin/bash
 
-readonly ROOT=$(dirname "$0")
+readonly root=$(dirname "$0")
+result=0
 
 for script in F I+ I-
 do
-  if ! (cd "$ROOT/$script" && go install)
+  if (cd "$root/$script" && go install)
   then
-    echo "Can't install $script"
+    echo "$script installed"
+  else
+    echo "can't install $script"
+    result=255
   fi
 done
+
+exit $result

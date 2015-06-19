@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 
 	"9fans.net/go/acme"
 )
@@ -87,25 +86,6 @@ func ReadDot(win *acme.Win) []byte {
 	}
 	CheckError(err, "ReadDot")
 	return dot
-}
-
-func Indent(data []byte, numSpaces int) []byte {
-	if len(data) == 0 {
-		return data
-	}
-
-	var prefix []byte = []byte(strings.Repeat(" ", numSpaces))
-	var sep []byte = []byte("\n")
-
-	var result []byte = make([]byte, 0)
-	for _, line := range bytes.Split(data, sep) {
-		if len(line) > 0 {
-			result = append(result, prefix...)
-			result = append(result, line...)
-		}
-		result = append(result, '\n')
-	}
-	return result[0 : len(result)-1]
 }
 
 func CheckError(err error, msg ...interface{}) {

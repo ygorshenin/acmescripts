@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	acme "github.com/ygorshenin/acmescripts"
 )
@@ -12,6 +14,25 @@ import (
 func usage() {
 	fmt.Fprintln(os.Stderr, "Usage: %s [num-spaces]", os.Args[0])
 	os.Exit(-1)
+}
+
+func addPrefix(data []byte, numSpaces int) []byte {
+	if len(data) == 0 {
+		return data
+	}
+
+	var prefix []byte = []byte(strings.Repeat(" ", numSpaces))
+	var sep []byte = []byte("\n")
+
+	var result []byte = make([]byte, 0)
+	for _, line := range bytes.Split(data, sep) {
+		if len(line) > 0 {
+			result = append(result, prefix...)
+			result = append(result, line...)
+		}
+		result = append(result, '\n')
+	}
+	return result[0 : len(result)-1]
 }
 
 func main() {
@@ -37,7 +58,7 @@ func main() {
 	start, _ := acme.ReadAddr(win)
 
 	// Indents dot, updates selection.
-	dot = acme.Indent(dot, numSpaces)
+	dot = addPrefix(dot, numSpaces)
 	acme.Write(win, "data", dot)
 	acme.WriteAddr(win, "#%v,#%v", start, start+len(dot))
 	acme.Ctl(win, "dot=addr")
