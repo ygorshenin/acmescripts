@@ -1,0 +1,11 @@
+#!/bin/bash
+
+readonly ROOT=$(dirname "$0")
+
+for script in F I+ I-
+do
+  if ! (cd "$ROOT/$script" && go install)
+  then
+    echo "Can't install $script"
+  fi
+done
