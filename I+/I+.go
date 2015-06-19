@@ -10,7 +10,7 @@ import (
 )
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "Udage: %s [num-spaces]", os.Args[0])
+	fmt.Fprintln(os.Stderr, "Usage: %s [num-spaces]", os.Args[0])
 	os.Exit(-1)
 }
 
@@ -23,7 +23,7 @@ func main() {
 		numSpaces64, err := strconv.ParseInt(os.Args[1], 10 /* base */, 0 /* bits */)
 		numSpaces = int(numSpaces64)
 		if err == nil && numSpaces < 0 {
-			err = errors.New("Negative numSpacess are disallowed.")
+			err = errors.New("Negative numSpaces are disallowed.")
 		}
 		acme.CheckError(err, "Can't parse command line argument:", os.Args[1])
 	default:
